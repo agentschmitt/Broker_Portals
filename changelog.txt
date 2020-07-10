@@ -1,5 +1,6 @@
 1.20
   - refactor spell list to seperate file
+  - refactor item loading, to fix render on first tooltip open
   - show dropdown instead of tooltip
   - show cooldoown times
 

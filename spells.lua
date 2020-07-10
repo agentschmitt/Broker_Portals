@@ -89,7 +89,6 @@ addonTable.items = {
     144392, -- Pugilist's Powerful Punching Ring (Horde)
     151016, -- Fractured Necrolyte Skull
     166559, -- Commander's Signet of Battle
-    168862, -- G.E.A.R. Tracking Beacon
     -- items usable instead of hearthstone
     28585,  -- Ruby Slippers
     37118,  -- Scroll of Recall

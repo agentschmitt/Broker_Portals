@@ -43,6 +43,7 @@ local obj = LibStub:GetLibrary('LibDataBroker-1.1'):NewDataObject(addonName, {
     icon = 'Interface\\Icons\\INV_Misc_Rune_06',
 })
 local methods = {}
+local itemCache = {}
 local frame = CreateFrame('frame')
 
 frame:SetScript('OnEvent', function(self, event, ...) if self[event] then return self[event](self, event, ...) end end)
@@ -192,6 +193,46 @@ local function GenerateLinks(spells)
     return itemsGenerated
 end
 
+local function IsCacheLoaded()
+    local count = 0
+    for _ in pairs(itemCache) do count = count + 1 end
+    return count == #items
+end
+
+local function LoadItemCache()
+    if (IsCacheLoaded()) then return end
+
+    for i = 1, #items do
+        local itemID = items[i]
+
+        --load item async
+        local item = Item:CreateFromItemID(itemID)
+        item:ContinueOnItemLoad(function()
+            if (hasItem(itemID)) then
+                --get item infos
+                local name, _, _, _, _, _, _, _, _, icon = GetItemInfo(item:GetItemLink())
+                local secure = {
+                    type = 'item',
+                    item = name
+                }
+
+                --add info to cache
+                itemCache[itemID] = {
+                    hasItem = true,
+                    name = name,
+                    icon = icon,
+                    secure = secure
+                }
+            else
+                -- add dummy to cache
+                itemCache[itemID] = {
+                    hasItem = false
+                }
+            end
+        end)
+    end
+end
+
 local function UpdateClassSpells()
     return GenerateLinks(portals)
 end
@@ -293,32 +334,28 @@ local function ShowWhistle()
 end
 
 local function ShowOtherItems()
-    local secure, itemID, icon, quality, name
     local i = 0
 
-    for i = 1, #items do
-        if hasItem(items[i]) then
-            itemID = items[i]
-            name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(items[i])
-            secure = {
-                type = 'item',
-                item = name
-            }
+    for itemID, cache in pairsByKeys(itemCache) do
+        if (cache.hasItem) then
+            local name = cache.name
+            local icon = cache.icon
+            local secure = cache.secure            
+            local cooldown = getItemCD(itemID)
+            local cdText = GetTextWithCooldown(name, cooldown)
 
-            if (name ~= nil) then
-                local cooldown = getItemCD(itemID)
-                local cdText = GetTextWithCooldown(name, cooldown)
-                dewdrop:AddLine(
-                    'textHeight', PortalsDB.fontSize,
-                    'text', cdText,
-                    'secure', secure,
-                    'icon', tostring(icon),
-                    'func', function() UpdateIcon(icon) end,
-                    'closeWhenClicked', true)
-            end
+            dewdrop:AddLine(
+                'textHeight', PortalsDB.fontSize,
+                'text', cdText,
+                'secure', secure,
+                'icon', tostring(icon),
+                'func', function() UpdateIcon(icon) end,
+                'closeWhenClicked', true)
+
             i = i + 1
         end
     end
+
     if i > 0 then
         dewdrop:AddLine()
     end
@@ -437,7 +474,7 @@ local function UpdateMenu(level, value)
 
     elseif level == 2 and value == 'options' then
         ShowOptionsMenu()
-    end
+    end    
 end
 
 function frame:PLAYER_LOGIN()
@@ -474,6 +511,8 @@ function frame:PLAYER_LOGIN()
     if icon then
         icon:Register('Broker_Portals', obj, PortalsDB.minimap)
     end
+
+    LoadItemCache()
 
     self:UnregisterEvent('PLAYER_LOGIN')
 end
