@@ -31,141 +31,11 @@ local UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT = UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT
 
 local addonName, addonTable = ...
 local L = addonTable.L
-
--- IDs of items usable for transportation
-local items = {
-    -- Dalaran rings
-    40585,  -- Signet of the Kirin Tor
-    40586,  -- Band of the Kirin Tor
-    44934,  -- Loop of the Kirin Tor
-    44935,  -- Ring of the Kirin Tor
-    45688,  -- Inscribed Band of the Kirin Tor
-    45689,  -- Inscribed Loop of the Kirin Tor
-    45690,  -- Inscribed Ring of the Kirin Tor
-    45691,  -- Inscribed Signet of the Kirin Tor
-    48954,  -- Etched Band of the Kirin Tor
-    48955,  -- Etched Loop of the Kirin Tor
-    48956,  -- Etched Ring of the Kirin Tor
-    48957,  -- Etched Signet of the Kirin Tor
-    51557,  -- Runed Signet of the Kirin Tor
-    51558,  -- Runed Loop of the Kirin Tor
-    51559,  -- Runed Ring of the Kirin Tor
-    51560,  -- Runed Band of the Kirin Tor
-    139599, -- Empowered Ring of the Kirin Tor
-    -- Engineering Gadgets
-    18984,  -- Dimensional Ripper - Everlook
-    18986,  -- Ultrasafe Transporter: Gadgetzan
-    30542,  -- Dimensional Ripper - Area 52
-    30544,  -- Ultrasafe Transporter: Toshley's Station
-    48933,  -- Wormhole Generator: Northrend
-    87215,  -- Wormhole Generator: Pandaria
-    112059, -- Wormhole Centrifuge
-    151652, -- Wormhole Generator: Argus
-    168807, -- Wormhole Generator: Kul Tiras
-    168808, -- Wormhole Generator: Zandalar
-    -- Seasonal items
-    21711,  -- Lunar Festival Invitation
-    37863,  -- Direbrew's Remote
-    -- Miscellaneous
-    17690,  -- Frostwolf Insignia Rank 1 (Horde)
-    17691,  -- Stormpike Insignia Rank 1 (Alliance)
-    17900,  -- Stormpike Insignia Rank 2 (Alliance)
-    17901,  -- Stormpike Insignia Rank 3 (Alliance)
-    17902,  -- Stormpike Insignia Rank 4 (Alliance)
-    17903,  -- Stormpike Insignia Rank 5 (Alliance)
-    17904,  -- Stormpike Insignia Rank 6 (Alliance)
-    17905,  -- Frostwolf Insignia Rank 2 (Horde)
-    17906,  -- Frostwolf Insignia Rank 3 (Horde)
-    17907,  -- Frostwolf Insignia Rank 4 (Horde)
-    17908,  -- Frostwolf Insignia Rank 5 (Horde)
-    17909,  -- Frostwolf Insignia Rank 6 (Horde)
-    22631,  -- Atiesh, Greatstaff of the Guardian
-    32757,  -- Blessed Medallion of Karabor
-    35230,  -- Darnarian's Scroll of Teleportation
-    43824,  -- The Schools of Arcane Magic - Mastery
-    46874,  -- Argent Crusader's Tabard
-    50287,  -- Boots of the Bay
-    52251,  -- Jaina's Locket
-    54452,  -- Ethereal Portal
-    58487,  -- Potion of Deepholm
-    61379,  -- Gidwin's Hearthstone
-    63206,  -- Wrap of Unity (Alliance)
-    63207,  -- Wrap of Unity (Horde)
-    63352,  -- Shroud of Cooperation (Alliance)
-    63353,  -- Shroud of Cooperation (Horde)
-    63378,  -- Hellscream's Reach Tabard
-    63379,  -- Baradin's Wardens Tabard
-    64457,  -- The Last Relic of Argus
-    65274,  -- Cloak of Coordination (Horde)
-    65360,  -- Cloak of Coordination (Alliance)
-    95050,  -- The Brassiest Knuckle (Horde)
-    95051,  -- The Brassiest Knuckle (Alliance)
-    95567,  -- Kirin Tor Beacon
-    95568,  -- Sunreaver Beacon
-    87548,  -- Lorewalker's Lodestone
-    93672,  -- Dark Portal
-    103678, -- Time-Lost Artifact
-    110560, -- Garrison Hearthstone
-    118662, -- Bladespire Relic
-    118663, -- Relic of Karabor
-    118907, -- Pit Fighter's Punching Ring
-    128353, -- Admiral's Compass
-    128502, -- Hunter's Seeking Crystal
-    128503, -- Master Hunter's Seeking Crystal
-    136849, -- Nature's Beacon
-    139590, -- Scroll of Teleport: Ravenholdt
-    140192, -- Dalaran Hearthstone
-    140324, -- Mobile Telemancy Beacon
-    142469, -- Violet Seal of the Grand Magus
-    144391, -- Pugilist's Powerful Punching Ring (Alliance)
-    144392, -- Pugilist's Powerful Punching Ring (Horde)
-    151016, -- Fractured Necrolyte Skull
-    166559, -- Commander's Signet of Battle
-    168862, -- G.E.A.R. Tracking Beacon
-    -- items usable instead of hearthstone
-    28585,  -- Ruby Slippers
-    37118,  -- Scroll of Recall
-    44314,  -- Scroll of Recall II
-    44315,  -- Scroll of Recall III
-    64488,  -- The Innkeeper's Daughter
-    142298, -- Astonishingly Scarlet Slippers
-    142542, -- Tome of Town Portal
-    162973, -- Greatfather Winter's Hearthstone
-    163045, -- Headless Horseman's Hearthstone
-    165669, -- Lunar Elder's Hearthstone
-  	165670, -- Peddlefeet's Lovely Hearthstone
-    165802, -- Noble Gardener's Hearthstone
-    168862, -- G.E.A.R. Tracking Beacon
-    168907, -- Holographic Digitalization Hearthstone
-    172179  -- Eternal Traveler's Hearthstone
-}
-
-local scrolls = {
-    6948    -- Hearthstone
-}
-
--- Gold Challenge portals
-local challengeSpells = {
-    { 131204, 'TRUE' }, -- Path of the Jade Serpent
-    { 131205, 'TRUE' }, -- Path of the Stout Brew
-    { 131206, 'TRUE' }, -- Path of the Shado-Pan
-    { 131222, 'TRUE' }, -- Path of the Mogu King
-    { 131225, 'TRUE' }, -- Path of the Setting Sun
-    { 131231, 'TRUE' }, -- Path of the Scarlet Blade
-    { 131229, 'TRUE' }, -- Path of the Scarlet Mitre
-    { 131232, 'TRUE' }, -- Path of the Necromancer
-    { 131228, 'TRUE' }, -- Path of the Black Ox
-    { 159895, 'TRUE' }, -- Path of the Bloodmaul
-    { 159896, 'TRUE' }, -- Path of the Iron Prow
-    { 159897, 'TRUE' }, -- Path of the Vigilant
-    { 159898, 'TRUE' }, -- Path of the Skies
-    { 159899, 'TRUE' }, -- Path of the Crescent Moon
-    { 159900, 'TRUE' }, -- Path of the Dark Rail
-    { 159901, 'TRUE' }, -- Path of the Verdant
-    { 159902, 'TRUE' }  -- Path of the Burning Mountain
-}
-
-local whistle = 141605 -- Flight Master's Whistle
+local items = addonTable.items
+local scrolls = addonTable.scrolls
+local challengeSpells = addonTable.challengeSpells
+local whistle = addonTable.whistle
+local portals = addonTable.portals
 
 local obj = LibStub:GetLibrary('LibDataBroker-1.1'):NewDataObject(addonName, {
     type = 'data source',
@@ -173,7 +43,6 @@ local obj = LibStub:GetLibrary('LibDataBroker-1.1'):NewDataObject(addonName, {
     icon = 'Interface\\Icons\\INV_Misc_Rune_06',
 })
 local methods = {}
-local portals
 local frame = CreateFrame('frame')
 
 frame:SetScript('OnEvent', function(self, event, ...) if self[event] then return self[event](self, event, ...) end end)
@@ -222,7 +91,7 @@ function findSpell(spellName)
     end
 end
 
--- returns true, if player has item with given ID in inventory or bags and it's not on cooldown
+-- returns true, if player has item with given ID in inventory or bags
 local function hasItem(itemID)
     local item, found, id
     -- scan inventory
@@ -231,11 +100,7 @@ local function hasItem(itemID)
         if item then
             found, _, id = item:find('^|c%x+|Hitem:(%d+):.+')
             if found and tonumber(id) == itemID then
-                if GetInventoryItemCooldown('player', slotId) ~= 0 then
-                    return false
-                else
-                    return true
-                end
+                return true
             end
         end
     end
@@ -246,28 +111,31 @@ local function hasItem(itemID)
             if item then
                 found, _, id = item:find('^|c%x+|Hitem:(%d+):.+')
                 if found and tonumber(id) == itemID then
-                    if GetContainerItemCooldown(bag, slot) ~= 0 then
-                        return false
-                    else
-                        return true
-                    end
+                    return true
                 end
             end
         end
     end
     -- check Toybox
     if PlayerHasToy(itemID) and C_ToyBox.IsToyUsable(itemID) then
-        local startTime, duration, cooldown
-        startTime, duration = GetItemCooldown(itemID)
-        cooldown = duration - (GetTime() - startTime)
-        if cooldown > 0 then
-            return false
-        else
-            return true
-        end
+        return true
     end
 
     return false
+end
+
+local function getItemCD(itemID)
+    local startTime, duration, cooldown
+    startTime, duration = GetItemCooldown(itemID)
+    cooldown = duration - (GetTime() - startTime)
+    return cooldown
+end
+
+local function getSpellCD(spellID)
+    local startTime, duration, cooldown
+    startTime, duration = GetSpellCooldown(spellID)
+    cooldown = duration - (GetTime() - startTime)
+    return cooldown    
 end
 
 local function getReagentCount(name)
@@ -287,100 +155,14 @@ local function getReagentCount(name)
     return count
 end
 
-local function SetupSpells()
-    local spells = {
-        Alliance = {
-            { 3561, 'TP_RUNE' },   -- TP:Stormwind
-            { 3562, 'TP_RUNE' },   -- TP:Ironforge
-            { 3565, 'TP_RUNE' },   -- TP:Darnassus
-            { 32271, 'TP_RUNE' },  -- TP:Exodar
-            { 49359, 'TP_RUNE' },  -- TP:Theramore
-            { 33690, 'TP_RUNE' },  -- TP:Shattrath
-            { 53140, 'TP_RUNE' },  -- TP:Dalaran
-            { 88342, 'TP_RUNE' },  -- TP:Tol Barad
-            { 132621, 'TP_RUNE' }, -- TP:Vale of Eternal Blossoms
-            { 120145, 'TP_RUNE' }, -- TP:Ancient Dalaran
-            { 176248, 'TP_RUNE' }, -- TP:StormShield
-            { 224869, 'TP_RUNE' }, -- TP:Dalaran - Broken Isles
-            { 193759, 'TP_RUNE' }, -- TP:Hall of the Guardian
-            { 281403, 'TP_RUNE' }, -- TP:Boralus
-            { 10059, 'P_RUNE' },   -- P:Stormwind
-            { 11416, 'P_RUNE' },   -- P:Ironforge
-            { 11419, 'P_RUNE' },   -- P:Darnassus
-            { 32266, 'P_RUNE' },   -- P:Exodar
-            { 49360, 'P_RUNE' },   -- P:Theramore
-            { 33691, 'P_RUNE' },   -- P:Shattrath
-            { 53142, 'P_RUNE' },   -- P:Dalaran
-            { 88345, 'P_RUNE' },   -- P:Tol Barad
-            { 120146, 'P_RUNE' },  -- P:Ancient Dalaran
-            { 132620, 'P_RUNE' },  -- P:Vale of Eternal Blossoms
-            { 176246, 'P_RUNE' },  -- P:StormShield
-            { 224871, 'P_RUNE' },  -- P:Dalaran - Broken Isles
-            { 281400, 'P_RUNE' }   -- P:Boralus
-        },
-        Horde = {
-            { 3563, 'TP_RUNE' },   -- TP:Undercity
-            { 3566, 'TP_RUNE' },   -- TP:Thunder Bluff
-            { 3567, 'TP_RUNE' },   -- TP:Orgrimmar
-            { 32272, 'TP_RUNE' },  -- TP:Silvermoon
-            { 49358, 'TP_RUNE' },  -- TP:Stonard
-            { 35715, 'TP_RUNE' },  -- TP:Shattrath
-            { 53140, 'TP_RUNE' },  -- TP:Dalaran
-            { 88344, 'TP_RUNE' },  -- TP:Tol Barad
-            { 132627, 'TP_RUNE' }, -- TP:Vale of Eternal Blossoms
-            { 120145, 'TP_RUNE' }, -- TP:Ancient Dalaran
-            { 176242, 'TP_RUNE' }, -- TP:Warspear
-            { 224869, 'TP_RUNE' }, -- TP:Dalaran - Broken Isles
-            { 193759, 'TP_RUNE' }, -- TP:Hall of the Guardian
-            { 281404, 'TP_RUNE' }, -- TP:Dazar'alor
-            { 11418, 'P_RUNE' },   -- P:Undercity
-            { 11420, 'P_RUNE' },   -- P:Thunder Bluff
-            { 11417, 'P_RUNE' },   -- P:Orgrimmar
-            { 32267, 'P_RUNE' },   -- P:Silvermoon
-            { 49361, 'P_RUNE' },   -- P:Stonard
-            { 35717, 'P_RUNE' },   -- P:Shattrath
-            { 53142, 'P_RUNE' },   -- P:Dalaran
-            { 88346, 'P_RUNE' },   -- P:Tol Barad
-            { 120146, 'P_RUNE' },  -- P:Ancient Dalaran
-            { 132626, 'P_RUNE' },  -- P:Vale of Eternal Blossoms
-            { 176244, 'P_RUNE' },  -- P:Warspear
-            { 224871, 'P_RUNE' },  -- P:Dalaran - Broken Isles
-            { 281402, 'P_RUNE' }   -- P:Dazar'alor
-        }
-    }
-
-    local _, class = UnitClass('player')
-    if class == 'MAGE' then
-        portals = spells[select(1, UnitFactionGroup('player'))]
-    elseif class == 'DEATHKNIGHT' then
-        portals = {
-            { 50977, 'TRUE' } -- Death Gate
-        }
-    elseif class == 'DRUID' then
-        portals = {
-            { 18960,  'TRUE' }, -- TP:Moonglade
-            { 147420, 'TRUE' }, -- TP:One with Nature
-            { 193753, 'TRUE' }  -- TP:Dreamwalk
-        }
-    elseif class == 'SHAMAN' then
-        portals = {
-            { 556, 'TRUE' } -- Astral Recall
-        }
-    elseif class == 'MONK' then
-        portals = {
-            { 126892, 'TRUE' }, -- Zen Pilgrimage
-            { 126895, 'TRUE' }  -- Zen Pilgrimage: Return
-        }
+local function ToggleMinimap()
+    local hide = not PortalsDB.minimap.hide
+    PortalsDB.minimap.hide = hide
+    if hide then
+        icon:Hide('Broker_Portals')
     else
-        portals = {}
+        icon:Show('Broker_Portals')
     end
-
-    local _, race = UnitRace('player')
-    if race == 'DarkIronDwarf' then
-        table.insert(portals, { 265225, 'TRUE' }) -- Mole Machine
-    end
-
-    wipe(spells)
 end
 
 local function GenerateLinks(spells)
@@ -411,13 +193,7 @@ local function GenerateLinks(spells)
 end
 
 local function UpdateClassSpells()
-    if not portals then
-        SetupSpells()
-    end
-
-    if portals then
-        return GenerateLinks(portals)
-    end
+    return GenerateLinks(portals)
 end
 
 local function UpdateChallengeSpells()
@@ -428,73 +204,45 @@ local function UpdateIcon(icon)
     obj.icon = icon
 end
 
-local function GetScrollCooldown()
-    local cooldown, startTime, duration
-
-    for i = 1, #scrolls do
-        if GetItemCount(scrolls[i]) > 0 or (PlayerHasToy(scrolls[i]) and C_ToyBox.IsToyUsable(scrolls[i])) then
-            startTime, duration = GetItemCooldown(scrolls[i])
-            cooldown = duration - (GetTime() - startTime)
-            if cooldown <= 0 then
-                return L['READY']
-            else
-                return SecondsToTime(cooldown)
-            end
-        end
+local function GetCooldownText(time)
+    local seconds = math.floor(time)
+    if (seconds < 60) then
+        return seconds .. 's'
     end
 
-    return L['N/A']
+    local minutes = math.floor(seconds / 60)
+    if (minutes < 60) then
+        return minutes .. 'm'
+    end
+
+    local hours = math.floor(minutes / 60)
+    if (hours < 60) then
+        return hours .. 'h'
+    end
+
+    local days = math.floor(hours / 24)
+    return days .. 'd'
 end
 
-local function GetWhistleCooldown()
-    local cooldown, startTime, duration
-    if GetItemCount(whistle) > 0 then
-        startTime, duration = GetItemCooldown(whistle)
-        cooldown = duration - (GetTime() - startTime)
-        if cooldown <= 0 then
-            return L['READY']
-        else
-            return SecondsToTime(cooldown)
-        end
-    end
-    return L['N/A']
-end
-
-local function GetItemCooldowns()
-    local cooldown, cooldowns, hours, mins, secs
-
-    for i = 1, #items do
-        if GetItemCount(items[i]) > 0 or (PlayerHasToy(items[i]) and C_ToyBox.IsToyUsable(items[i])) then
-            startTime, duration = GetItemCooldown(items[i])
-            cooldown = duration - (GetTime() - startTime)
-            if cooldown <= 0 then
-                cooldown = L['READY']
-            else
-                cooldown = SecondsToTime(cooldown)
-            end
-
-            if cooldowns == nil then
-                cooldowns = {}
-            end
-
-            local name = GetItemInfo(items[i]) or select(2, C_ToyBox.GetToyInfo(items[i]))
-
-            if name then
-                cooldowns[name] = cooldown
-            end
-        end
+local function GetTextWithCooldown(text, cooldown)
+    local colorCD = "ff0000"    
+    
+    if (cooldown > 0) then
+        local cooldownText = GetCooldownText(cooldown)
+        return "|cff"..colorCD..text.." "..cooldownText.."|r"        
     end
 
-    return cooldowns
+    return text
 end
 
 local function ShowHearthstone()
     local bindLoc = GetBindLocation()
-    local secure, text, icon, name
+    local secure, text, itemID, icon, name
 
     for i = 1, #scrolls do
         if hasItem(scrolls[i]) then
-            name, _, _, _, _, _, _, _, _, icon = GetItemInfo(scrolls[i])
+            itemID = scrolls[i]
+            name, _, _, _, _, _, _, _, _, icon = GetItemInfo(itemID)
             text = L['INN'] .. ' ' .. bindLoc
             secure = {
                 type = 'item',
@@ -505,31 +253,37 @@ local function ShowHearthstone()
     end
 
     if secure ~= nil then
+        local cooldown = getItemCD(itemID)
+        local cdText = GetTextWithCooldown(text, cooldown)
         dewdrop:AddLine(
             'textHeight', PortalsDB.fontSize,
-            'text', text,
+            'text', cdText,
             'secure', secure,
             'icon', tostring(icon),
             'func', function() UpdateIcon(icon) end,
-            'closeWhenClicked', true)
+            '	WhenClicked', true)
         dewdrop:AddLine()
     end
 end
 
 local function ShowWhistle()
-    local secure, icon, name
-    if hasItem(whistle) then
-        name, _, _, _, _, _, _, _, _, icon = GetItemInfo(whistle)
+    local secure, itemID, icon, name
+    itemID = whistle
+    if hasItem(itemID) then
+        itemID = whistle
+        name, _, _, _, _, _, _, _, _, icon = GetItemInfo(itemID)
         secure = {
             type = 'item',
             item = name
         }
     end
     if secure ~= nil then
+        local cooldown = getItemCD(itemID)
+        local cdText = GetTextWithCooldown(name, cooldown)        
         dewdrop:AddLine()
         dewdrop:AddLine(
             'textHeight', PortalsDB.fontSize,
-            'text', name,
+            'text', cdText,
             'secure', secure,
             'icon', tostring(icon),
             'func', function() UpdateIcon(icon) end,
@@ -539,27 +293,29 @@ local function ShowWhistle()
 end
 
 local function ShowOtherItems()
-    local secure, icon, quality, name
+    local secure, itemID, icon, quality, name
     local i = 0
 
     for i = 1, #items do
         if hasItem(items[i]) then
+            itemID = items[i]
             name, _, quality, _, _, _, _, _, _, icon = GetItemInfo(items[i])
             secure = {
                 type = 'item',
                 item = name
             }
 
-            dewdrop:AddLine(
-                'textHeight', PortalsDB.fontSize,
-                'text', name,
-                'textR', ITEM_QUALITY_COLORS[quality].r,
-                'textG', ITEM_QUALITY_COLORS[quality].g,
-                'textB', ITEM_QUALITY_COLORS[quality].b,
-                'secure', secure,
-                'icon', tostring(icon),
-                'func', function() UpdateIcon(icon) end,
-                'closeWhenClicked', true)
+            if (name ~= nil) then
+                local cooldown = getItemCD(itemID)
+                local cdText = GetTextWithCooldown(name, cooldown)
+                dewdrop:AddLine(
+                    'textHeight', PortalsDB.fontSize,
+                    'text', cdText,
+                    'secure', secure,
+                    'icon', tostring(icon),
+                    'func', function() UpdateIcon(icon) end,
+                    'closeWhenClicked', true)
+            end
             i = i + 1
         end
     end
@@ -568,110 +324,119 @@ local function ShowOtherItems()
     end
 end
 
-local function ToggleMinimap()
-    local hide = not PortalsDB.minimap.hide
-    PortalsDB.minimap.hide = hide
-    if hide then
-        icon:Hide('Broker_Portals')
-    else
-        icon:Show('Broker_Portals')
+local function AddSubMenu()
+    local chatType = (UnitInRaid("player") and "RAID") or (GetNumGroupMembers() > 0 and "PARTY") or nil
+    local announce = PortalsDB.announce
+    local addedSpells = 0
+
+    for k, v in pairsByKeys(methods) do
+        if v.secure then
+            local cooldown = getSpellCD(v.text)
+            local cdText = GetTextWithCooldown(v.text, cooldown)
+            dewdrop:AddLine(
+                'textHeight', PortalsDB.fontSize,
+                'text', cdText,
+                'secure', v.secure,
+                'icon', tostring(v.spellIcon),
+                'func', function()
+                    UpdateIcon(v.spellIcon)
+                    if announce and v.isPortal and chatType then
+                        SendChatMessage(L['ANNOUNCEMENT'] .. ' ' .. v.text, chatType)
+                    end
+                end,
+                'closeWhenClicked', true)
+            addedSpells = addedSpells + 1
+        end
     end
+
+    if (addedSpells > 0) then
+        dewdrop:AddLine()
+    end
+end
+
+local function ShowClassSpells()
+    methods = {}
+    local classSpells = UpdateClassSpells()
+    if classSpells > 0 then
+      AddSubMenu()
+    end    
+end
+
+local function ShowChallengeSpells()
+    methods = {}
+    local challengeSpells = UpdateChallengeSpells()
+    if challengeSpells > 0 then
+      AddSubMenu()
+    end    
+end
+
+local function ShowOptions()
+    dewdrop:AddLine(
+        'textHeight', PortalsDB.fontSize,
+        'text', L['OPTIONS'],
+        'hasArrow', true,
+        'value', 'options')    
+end
+
+local function ShowOptionsMenu()
+    dewdrop:AddLine(
+        'textHeight', PortalsDB.fontSize,
+        'text', L['SHOW_ITEMS'],
+        'checked', PortalsDB.showItems,
+        'func', function() PortalsDB.showItems = not PortalsDB.showItems end,
+        'closeWhenClicked', true)
+    dewdrop:AddLine(
+        'textHeight', PortalsDB.fontSize,
+        'text', L['SHOW_ITEM_COOLDOWNS'],
+        'checked', PortalsDB.showItemCooldowns,
+        'func', function() PortalsDB.showItemCooldowns = not PortalsDB.showItemCooldowns end,
+        'closeWhenClicked', true)
+    dewdrop:AddLine(
+        'textHeight', PortalsDB.fontSize,
+        'text', L['ATT_MINIMAP'],
+        'checked', not PortalsDB.minimap.hide,
+        'func', function() ToggleMinimap() end,
+        'closeWhenClicked', true)
+    dewdrop:AddLine(
+        'textHeight', PortalsDB.fontSize,
+        'text', L['ANNOUNCE'],
+        'checked', PortalsDB.announce,
+        'func', function() PortalsDB.announce = not PortalsDB.announce end,
+        'closeWhenClicked', true)
+    dewdrop:AddLine(
+        'textHeight', PortalsDB.fontSize,
+        'text', L['DROPDOWN_FONT_SIZE'],
+        'hasArrow', true,
+        'hasEditBox', true,
+        'editBoxText', PortalsDB.fontSize,
+                    'editBoxFunc', function(value)
+                   if value ~= '' and tonumber(value) ~= nil then
+                       PortalsDB.fontSize = tonumber(value)
+                   else
+                       PortalsDB.fontSize = UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT
+                   end
+               end)
 end
 
 local function UpdateMenu(level, value)
     dewdrop:SetFontSize(PortalsDB.fontSize)
 
     if level == 1 then
-        dewdrop:AddLine('text', 'Broker_Portals', 'isTitle', true)
-
-        methods = {}
-        local spells = UpdateClassSpells()
-        if spells > 0 then
-          dewdrop:AddLine()
-        end
-        local challengeSpells = UpdateChallengeSpells()
-        if challengeSpells > 0 then
-          dewdrop:AddLine()
-        end
-
-        local chatType = (UnitInRaid("player") and "RAID") or (GetNumGroupMembers() > 0 and "PARTY") or nil
-        local announce = PortalsDB.announce
-        for k, v in pairsByKeys(methods) do
-            if v.secure and GetSpellCooldown(v.text) == 0 then
-                dewdrop:AddLine(
-                    'textHeight', PortalsDB.fontSize,
-                    'text', v.text,
-                    'secure', v.secure,
-                    'icon', tostring(v.spellIcon),
-                    'func', function()
-                        UpdateIcon(v.spellIcon)
-                        if announce and v.isPortal and chatType then
-                            SendChatMessage(L['ANNOUNCEMENT'] .. ' ' .. v.text, chatType)
-                        end
-                    end,
-                    'closeWhenClicked', true)
-            end
-        end
-
-        dewdrop:AddLine()
-
-        ShowHearthstone()
+        ShowChallengeSpells()
 
         if PortalsDB.showItems then
             ShowOtherItems()
             ShowWhistle()
         end
 
-        dewdrop:AddLine(
-            'textHeight', PortalsDB.fontSize,
-            'text', L['OPTIONS'],
-            'hasArrow', true,
-            'value', 'options')
+        ShowClassSpells()        
 
-        dewdrop:AddLine(
-            'textHeight', PortalsDB.fontSize,
-            'text', CLOSE,
-            'tooltipTitle', CLOSE,
-            'tooltipText', CLOSE_DESC,
-            'closeWhenClicked', true)
+        ShowHearthstone()        
+
+        ShowOptions()
+
     elseif level == 2 and value == 'options' then
-        dewdrop:AddLine(
-            'textHeight', PortalsDB.fontSize,
-            'text', L['SHOW_ITEMS'],
-            'checked', PortalsDB.showItems,
-            'func', function() PortalsDB.showItems = not PortalsDB.showItems end,
-            'closeWhenClicked', true)
-        dewdrop:AddLine(
-            'textHeight', PortalsDB.fontSize,
-            'text', L['SHOW_ITEM_COOLDOWNS'],
-            'checked', PortalsDB.showItemCooldowns,
-            'func', function() PortalsDB.showItemCooldowns = not PortalsDB.showItemCooldowns end,
-            'closeWhenClicked', true)
-        dewdrop:AddLine(
-            'textHeight', PortalsDB.fontSize,
-            'text', L['ATT_MINIMAP'],
-            'checked', not PortalsDB.minimap.hide,
-            'func', function() ToggleMinimap() end,
-            'closeWhenClicked', true)
-        dewdrop:AddLine(
-            'textHeight', PortalsDB.fontSize,
-            'text', L['ANNOUNCE'],
-            'checked', PortalsDB.announce,
-            'func', function() PortalsDB.announce = not PortalsDB.announce end,
-            'closeWhenClicked', true)
-        dewdrop:AddLine(
-            'textHeight', PortalsDB.fontSize,
-            'text', L['DROPDOWN_FONT_SIZE'],
-            'hasArrow', true,
-            'hasEditBox', true,
-            'editBoxText', PortalsDB.fontSize,
-						'editBoxFunc', function(value)
-                       if value ~= '' and tonumber(value) ~= nil then
-                           PortalsDB.fontSize = tonumber(value)
-                       else
-                           PortalsDB.fontSize = UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT
-                       end
-                   end)
+        ShowOptionsMenu()
     end
 end
 
@@ -718,64 +483,19 @@ function frame:SKILL_LINES_CHANGED()
     UpdateChallengeSpells()
 end
 
--- All credit for this func goes to Tekkub and his picoGuild!
-local function GetTipAnchor(frame)
-    local x, y = frame:GetCenter()
-    if not x or not y then return 'TOPLEFT', 'BOTTOMLEFT' end
-    local hhalf = (x > UIParent:GetWidth() * 2 / 3) and 'RIGHT' or (x < UIParent:GetWidth() / 3) and 'LEFT' or ''
-    local vhalf = (y > UIParent:GetHeight() / 2) and 'TOP' or 'BOTTOM'
-    return vhalf .. hhalf, frame, (vhalf == 'TOP' and 'BOTTOM' or 'TOP') .. hhalf
-end
-
 function obj.OnClick(self, button)
-    GameTooltip:Hide()
-    if button == 'RightButton' then
-        dewdrop:Open(self, 'children', function(level, value) UpdateMenu(level, value) end)
-    end
+	if (self ~= nil and dewdrop:IsOpen(self)) then
+		dewdrop:Close()
+	else
+		dewdrop:Open(self, 'children', function(level, value) UpdateMenu(level, value) end)
+	end
 end
 
 function obj.OnLeave()
-    GameTooltip:Hide()
 end
 
 function obj.OnEnter(self)
-    GameTooltip:SetOwner(self, 'ANCHOR_NONE')
-    GameTooltip:SetPoint(GetTipAnchor(self))
-    GameTooltip:ClearLines()
-
-    GameTooltip:AddLine('Broker Portals')
-    GameTooltip:AddDoubleLine(L['RCLICK'], L['SEE_SPELLS'], 0.9, 0.6, 0.2, 0.2, 1, 0.2)
-    GameTooltip:AddLine(' ')
-
-    local scrollCooldown = GetScrollCooldown()
-    if scrollCooldown == L['READY'] then
-        GameTooltip:AddDoubleLine(L['HEARTHSTONE'] .. ': ' .. GetBindLocation(), scrollCooldown, 0.9, 0.6, 0.2, 0.2, 1, 0.2)
-    else
-       GameTooltip:AddDoubleLine(L['HEARTHSTONE'] .. ': ' .. GetBindLocation(), scrollCooldown, 0.9, 0.6, 0.2, 1, 1, 0.2)
-    end
-
-    if PortalsDB.showItemCooldowns then
-        local cooldowns = GetItemCooldowns()
-        if cooldowns ~= nil then
-            GameTooltip:AddLine(' ')
-            for name, cooldown in pairs(cooldowns) do
-                if cooldown == L['READY'] then
-                    GameTooltip:AddDoubleLine(name, cooldown, 0.9, 0.6, 0.2, 0.2, 1, 0.2)
-                else
-                    GameTooltip:AddDoubleLine(name, cooldown, 0.9, 0.6, 0.2, 1, 1, 0.2)
-                end
-            end
-        end
-    end
-
-    local whistleCooldown = GetWhistleCooldown()
-    if whistleCooldown == L['READY'] then
-        GameTooltip:AddDoubleLine(GetItemInfo(whistle), whistleCooldown, 0.9, 0.6, 0.2, 0.2, 1, 0.2)
-    else
-       GameTooltip:AddDoubleLine(GetItemInfo(whistle), whistleCooldown, 0.9, 0.6, 0.2, 1, 1, 0.2)
-    end
-
-    GameTooltip:Show()
+    dewdrop:Open(self, 'children', function(level, value) UpdateMenu(level, value) end)
 end
 
 -- slash command definition

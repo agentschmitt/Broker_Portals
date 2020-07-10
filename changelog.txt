@@ -1,3 +1,8 @@
+1.20
+  - refactor spell list to seperate file
+  - show dropdown instead of tooltip
+  - show cooldoown times
+
 1.11.1:
   - update: added Noble Gardener's Hearthstone and G.E.A.R. Tracking Beacon
 
