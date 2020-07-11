@@ -193,43 +193,54 @@ local function GenerateLinks(spells)
     return itemsGenerated
 end
 
-local function IsCacheLoaded()
-    local count = 0
-    for _ in pairs(itemCache) do count = count + 1 end
-    return count == #items
+local function LoadItem(itemID)
+    --load item async
+    local item = Item:CreateFromItemID(itemID)
+    item:ContinueOnItemLoad(function()
+        if (hasItem(itemID)) then
+            --get item infos
+            local name, _, _, _, _, _, _, _, _, icon = GetItemInfo(item:GetItemLink())
+            local secure = {
+                type = 'item',
+                item = name
+            }
+
+            --add info to cache
+            itemCache[itemID] = {
+                hasItem = true,
+                name = name,
+                icon = icon,
+                secure = secure
+            }
+        else
+            -- add dummy to cache
+            itemCache[itemID] = {
+                hasItem = false
+            }
+        end
+    end)
 end
 
-local function LoadItemCache()
+local function IsCacheLoaded()
+    local count = 0
+    local totalCount = #items + #scrolls + 1
+    for _ in pairs(itemCache) do count = count + 1 end
+    return count == totalCount
+end
+
+local function LoadItems()
     if (IsCacheLoaded()) then return end
+
+    LoadItem(whistle)
+
+    for i = 1, #scrolls do
+        local itemID = scrolls[i]
+        LoadItem(itemID)
+    end    
 
     for i = 1, #items do
         local itemID = items[i]
-
-        --load item async
-        local item = Item:CreateFromItemID(itemID)
-        item:ContinueOnItemLoad(function()
-            if (hasItem(itemID)) then
-                --get item infos
-                local name, _, _, _, _, _, _, _, _, icon = GetItemInfo(item:GetItemLink())
-                local secure = {
-                    type = 'item',
-                    item = name
-                }
-
-                --add info to cache
-                itemCache[itemID] = {
-                    hasItem = true,
-                    name = name,
-                    icon = icon,
-                    secure = secure
-                }
-            else
-                -- add dummy to cache
-                itemCache[itemID] = {
-                    hasItem = false
-                }
-            end
-        end)
+        LoadItem(itemID)
     end
 end
 
@@ -276,52 +287,16 @@ local function GetTextWithCooldown(text, cooldown)
     return text
 end
 
-local function ShowHearthstone()
-    local bindLoc = GetBindLocation()
-    local secure, text, itemID, icon, name
+local function AddItemToMenu(itemID, alternativeName)
+    local cache = itemCache[itemID]
 
-    for i = 1, #scrolls do
-        if hasItem(scrolls[i]) then
-            itemID = scrolls[i]
-            name, _, _, _, _, _, _, _, _, icon = GetItemInfo(itemID)
-            text = L['INN'] .. ' ' .. bindLoc
-            secure = {
-                type = 'item',
-                item = name
-            }
-            break
-        end
-    end
-
-    if secure ~= nil then
+    if (cache ~= nil and cache.hasItem) then
+        local name = alternativeName or cache.name
+        local icon = cache.icon
+        local secure = cache.secure            
         local cooldown = getItemCD(itemID)
-        local cdText = GetTextWithCooldown(text, cooldown)
-        dewdrop:AddLine(
-            'textHeight', PortalsDB.fontSize,
-            'text', cdText,
-            'secure', secure,
-            'icon', tostring(icon),
-            'func', function() UpdateIcon(icon) end,
-            '	WhenClicked', true)
-        dewdrop:AddLine()
-    end
-end
-
-local function ShowWhistle()
-    local secure, itemID, icon, name
-    itemID = whistle
-    if hasItem(itemID) then
-        itemID = whistle
-        name, _, _, _, _, _, _, _, _, icon = GetItemInfo(itemID)
-        secure = {
-            type = 'item',
-            item = name
-        }
-    end
-    if secure ~= nil then
-        local cooldown = getItemCD(itemID)
-        local cdText = GetTextWithCooldown(name, cooldown)        
-        dewdrop:AddLine()
+        local cdText = GetTextWithCooldown(name, cooldown)
+    
         dewdrop:AddLine(
             'textHeight', PortalsDB.fontSize,
             'text', cdText,
@@ -329,34 +304,47 @@ local function ShowWhistle()
             'icon', tostring(icon),
             'func', function() UpdateIcon(icon) end,
             'closeWhenClicked', true)
+        
+        return true
+    else
+        return false
+    end
+end
+
+local function ShowWhistle()
+    if (AddItemToMenu(whistle)) then
+        dewdrop:AddLine()
+    end
+end
+
+local function ShowHearthstone()
+    local bindLoc = GetBindLocation()
+    local text = L['INN'] .. ' ' .. bindLoc
+    local seperator = false
+
+    for i = 1, #scrolls do
+        local itemID = scrolls[i]
+        if (AddItemToMenu(itemID, text)) then
+            seperator = true
+        end
+    end
+
+    if seperator then
         dewdrop:AddLine()
     end
 end
 
 local function ShowOtherItems()
-    local i = 0
+    local seperator = false
 
-    for itemID, cache in pairsByKeys(itemCache) do
-        if (cache.hasItem) then
-            local name = cache.name
-            local icon = cache.icon
-            local secure = cache.secure            
-            local cooldown = getItemCD(itemID)
-            local cdText = GetTextWithCooldown(name, cooldown)
-
-            dewdrop:AddLine(
-                'textHeight', PortalsDB.fontSize,
-                'text', cdText,
-                'secure', secure,
-                'icon', tostring(icon),
-                'func', function() UpdateIcon(icon) end,
-                'closeWhenClicked', true)
-
-            i = i + 1
+    for i = 1, #items do
+        local itemID = items[i]
+        if (AddItemToMenu(itemID)) then
+            seperator = true
         end
     end
 
-    if i > 0 then
+    if seperator then
         dewdrop:AddLine()
     end
 end
@@ -512,7 +500,7 @@ function frame:PLAYER_LOGIN()
         icon:Register('Broker_Portals', obj, PortalsDB.minimap)
     end
 
-    LoadItemCache()
+    LoadItems()
 
     self:UnregisterEvent('PLAYER_LOGIN')
 end
