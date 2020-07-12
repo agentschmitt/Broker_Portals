@@ -1,12 +1,12 @@
 if not LibStub then return end
 
-local dewdrop = LibStub('LibDewdrop-3.0', true)
-local icon = LibStub('LibDBIcon-1.0')
+local Dewdrop = LibStub('LibDewdrop-3.0', true)
+local LibIcon = LibStub('LibDBIcon-1.0')
+local LibDataBroker = LibStub:GetLibrary('LibDataBroker-1.1')
 
 local _
 
 local CreateFrame = CreateFrame
-
 local GetBindLocation = GetBindLocation
 local GetNumGroupMembers = GetNumGroupMembers
 local SendChatMessage = SendChatMessage
@@ -30,7 +30,7 @@ local getItemCD = addonTable.getItemCD
 local getSpellCD = addonTable.getSpellCD
 local getTextWithCooldown = addonTable.getTextWithCooldown
 
-local obj = LibStub:GetLibrary('LibDataBroker-1.1'):NewDataObject(addonName, {
+local LDB = LibDataBroker:NewDataObject(addonName, {
     type = 'data source',
     text = L['P'],
     icon = 'Interface\\Icons\\INV_Misc_Rune_06',
@@ -51,14 +51,14 @@ local function ToggleMinimap()
     local hide = not PortalsDB.minimap.hide
     PortalsDB.minimap.hide = hide
     if hide then
-        icon:Hide('Broker_Portals')
+        LibIcon:Hide('Broker_Portals')
     else
-        icon:Show('Broker_Portals')
+        LibIcon:Show('Broker_Portals')
     end
 end
 
 local function UpdateIcon(icon)
-    obj.icon = icon
+    LDB.icon = icon
 end
 
 local function AnnouncePortal(isPortal, text)
@@ -75,7 +75,7 @@ local function AddItemToMenu(itemID, alternativeName)
         local cooldown = getItemCD(itemID)
         local cdText = getTextWithCooldown(alternativeName or link.name, cooldown)
     
-        dewdrop:AddLine(
+        Dewdrop:AddLine(
             'textHeight', PortalsDB.fontSize,
             'text', cdText,
             'secure', link.secure,
@@ -93,7 +93,7 @@ local function AddSpellToMenu(link)
     local cooldown = getSpellCD(link.name)
     local cdText = getTextWithCooldown(link.name, cooldown)
 
-    dewdrop:AddLine(
+    Dewdrop:AddLine(
         'textHeight', PortalsDB.fontSize,
         'text', cdText,
         'secure', link.secure,
@@ -114,13 +114,13 @@ local function AddSpellsToMenu(links)
     end
 
     if (seperator) then
-        dewdrop:AddLine()
+        Dewdrop:AddLine()
     end
 end
 
 local function ShowWhistle()
     if (AddItemToMenu(whistle)) then
-        dewdrop:AddLine()
+        Dewdrop:AddLine()
     end
 end
 
@@ -137,7 +137,7 @@ local function ShowHearthstone()
     end
 
     if seperator then
-        dewdrop:AddLine()
+        Dewdrop:AddLine()
     end
 end
 
@@ -152,7 +152,7 @@ local function ShowOtherItems()
     end
 
     if seperator then
-        dewdrop:AddLine()
+        Dewdrop:AddLine()
     end
 end
 
@@ -167,7 +167,7 @@ local function ShowChallengeSpells()
 end
 
 local function ShowOptions()
-    dewdrop:AddLine(
+    Dewdrop:AddLine(
         'textHeight', PortalsDB.fontSize,
         'text', L['OPTIONS'],
         'hasArrow', true,
@@ -175,31 +175,31 @@ local function ShowOptions()
 end
 
 local function ShowOptionsMenu()
-    dewdrop:AddLine(
+    Dewdrop:AddLine(
         'textHeight', PortalsDB.fontSize,
         'text', L['SHOW_ITEMS'],
         'checked', PortalsDB.showItems,
         'func', function() PortalsDB.showItems = not PortalsDB.showItems end,
         'closeWhenClicked', true)
-    dewdrop:AddLine(
+    Dewdrop:AddLine(
         'textHeight', PortalsDB.fontSize,
         'text', L['SHOW_ITEM_COOLDOWNS'],
         'checked', PortalsDB.showItemCooldowns,
         'func', function() PortalsDB.showItemCooldowns = not PortalsDB.showItemCooldowns end,
         'closeWhenClicked', true)
-    dewdrop:AddLine(
+    Dewdrop:AddLine(
         'textHeight', PortalsDB.fontSize,
         'text', L['ATT_MINIMAP'],
         'checked', not PortalsDB.minimap.hide,
         'func', function() ToggleMinimap() end,
         'closeWhenClicked', true)
-    dewdrop:AddLine(
+    Dewdrop:AddLine(
         'textHeight', PortalsDB.fontSize,
         'text', L['ANNOUNCE'],
         'checked', PortalsDB.announce,
         'func', function() PortalsDB.announce = not PortalsDB.announce end,
         'closeWhenClicked', true)
-    dewdrop:AddLine(
+    Dewdrop:AddLine(
         'textHeight', PortalsDB.fontSize,
         'text', L['DROPDOWN_FONT_SIZE'],
         'hasArrow', true,
@@ -215,7 +215,7 @@ local function ShowOptionsMenu()
 end
 
 local function UpdateMenu(level, value)
-    dewdrop:SetFontSize(PortalsDB.fontSize)
+    Dewdrop:SetFontSize(PortalsDB.fontSize)
 
     if level == 1 then
         ShowChallengeSpells()
@@ -267,8 +267,8 @@ function frame:PLAYER_LOGIN()
         PortalsDB.version = 4
     end
 
-    if icon then
-        icon:Register('Broker_Portals', obj, PortalsDB.minimap)
+    if LibIcon then
+        LibIcon:Register('Broker_Portals', LDB, PortalsDB.minimap)
     end
 
     updateItems()
@@ -281,19 +281,19 @@ function frame:SKILL_LINES_CHANGED()
     updateChallengeSpells()
 end
 
-function obj.OnClick(self, button)
-	if (self ~= nil and dewdrop:IsOpen(self)) then
-		dewdrop:Close()
+function LDB.OnClick(self, button)
+	if (self ~= nil and Dewdrop:IsOpen(self)) then
+		Dewdrop:Close()
 	else
-		dewdrop:Open(self, 'children', function(level, value) UpdateMenu(level, value) end)
+		Dewdrop:Open(self, 'children', function(level, value) UpdateMenu(level, value) end)
 	end
 end
 
-function obj.OnLeave()
+function LDB.OnLeave()
 end
 
-function obj.OnEnter(self)
-    dewdrop:Open(self, 'children', function(level, value) UpdateMenu(level, value) end)
+function LDB.OnEnter(self)
+    Dewdrop:Open(self, 'children', function(level, value) UpdateMenu(level, value) end)
 end
 
 -- slash command definition
