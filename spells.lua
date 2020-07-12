@@ -1,7 +1,6 @@
 local addonName, addonTable = ...
 
-local portals
-local spells = {
+local magePortals = {
     Alliance = {
         { 3561, 'TP_RUNE' },   -- TP:Stormwind
         { 3562, 'TP_RUNE' },   -- TP:Ironforge
@@ -63,7 +62,7 @@ local spells = {
 }
 
 -- Gold Challenge portals
-addonTable.challengeSpells = {
+local challengeSpells = {
     { 131204, 'TRUE' }, -- Path of the Jade Serpent
     { 131205, 'TRUE' }, -- Path of the Stout Brew
     { 131206, 'TRUE' }, -- Path of the Shado-Pan
@@ -87,8 +86,13 @@ local UnitClass = UnitClass
 local UnitRace = UnitRace
 
 local _, class = UnitClass('player')
+local _, race = UnitRace('player')
+local faction, _ = UnitFactionGroup('player')
+local portals = {}
+
+-- class portals
 if class == 'MAGE' then
-    portals = spells[select(1, UnitFactionGroup('player'))]
+    portals = magePortals[faction]
 elseif class == 'DEATHKNIGHT' then
     portals = {
         { 50977, 'TRUE' } -- Death Gate
@@ -108,14 +112,15 @@ elseif class == 'MONK' then
         { 126892, 'TRUE' }, -- Zen Pilgrimage
         { 126895, 'TRUE' }  -- Zen Pilgrimage: Return
     }
-else
-    portals = {}
 end
 
-local _, race = UnitRace('player')
+-- race portals
 if race == 'DarkIronDwarf' then
     table.insert(portals, { 265225, 'TRUE' }) -- Mole Machine
+elseif race == 'Vulpera' then
+    table.insert(portals, { 312372, 'TRUE' }) -- Return to Camp
+    table.insert(portals, { 312370, 'TRUE' }) -- Make Camp
 end
 
-wipe(spells)
 addonTable.portals = portals
+addonTable.challengeSpells = challengeSpells
