@@ -73,7 +73,7 @@ local function AddItemToMenu(itemID, alternativeName)
 
     if (link ~= nil and link.hasItem) then
         local cooldown = getItemCD(itemID)
-        local cdText = getTextWithCooldown(alternativeName or name, cooldown)
+        local cdText = getTextWithCooldown(alternativeName or link.name, cooldown)
     
         dewdrop:AddLine(
             'textHeight', PortalsDB.fontSize,
