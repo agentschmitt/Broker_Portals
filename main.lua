@@ -77,9 +77,9 @@ local function AddItemToMenu(itemID, alternativeName)
 
     if (link ~= nil and link.hasItem) then
         local cooldown = getItemCD(itemID)
-        local cdText = getTextWithCooldown(alternativeName or link.name, cooldown)
+        local text = getTextWithCooldown(alternativeName or link.name, cooldown)
     
-        local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, cdText))
+        local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, ' '..text))
         
         tooltip:SetCellScript(lineIndex, 1, "OnEnter", function(self)
             secureFrame:Activate(self, link.secure)
@@ -97,9 +97,9 @@ end
 
 local function AddSpellToMenu(link)
     local cooldown = getSpellCD(link.name)
-    local cdText = getTextWithCooldown(link.name, cooldown)
+    local text = getTextWithCooldown(link.name, cooldown)
 
-    local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, cdText))
+    local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, ' '..text))
     
     tooltip:SetCellScript(lineIndex, 1, "OnEnter", function(self)
         secureFrame:Activate(self, link.secure)

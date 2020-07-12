@@ -1,5 +1,7 @@
 1.21
   - update: use libqtip for tooltip, libdewdrop remains for options
+  - update: remove option for itemcooldown (show always)  
+  - update: remove option for fontsize
 
 1.20
   - update: refactor lua files to seperate ui, functions, item & spell list
