@@ -1,8 +1,8 @@
 1.20
-  - refactor spell list to seperate file
-  - refactor item loading, to fix render on first tooltip open
-  - show dropdown instead of tooltip
-  - show cooldoown times
+  - update: refactor lua files to seperate ui, functions, item & spell list
+  - bugfix: items not loaded on first tooltip open
+  - feature: show dropdown with items & spell cooldowns instead of seperate tooltip
+  - feature: added vulpera support
 
 1.11.1:
   - update: added Noble Gardener's Hearthstone and G.E.A.R. Tracking Beacon
