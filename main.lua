@@ -1,6 +1,7 @@
 if not LibStub then return end
 
 local Dewdrop = LibStub('LibDewdrop-3.0', true)
+local LibQTip = LibStub('LibQTip-1.0')
 local LibIcon = LibStub('LibDBIcon-1.0')
 local LibDataBroker = LibStub:GetLibrary('LibDataBroker-1.1')
 
@@ -30,11 +31,14 @@ local getItemCD = addonTable.getItemCD
 local getSpellCD = addonTable.getSpellCD
 local getTextWithCooldown = addonTable.getTextWithCooldown
 
+local secureFrame = addonTable.secureFrame
+
 local LDB = LibDataBroker:NewDataObject(addonName, {
     type = 'data source',
     text = L['P'],
     icon = 'Interface\\Icons\\INV_Misc_Rune_06',
 })
+local tooltip
 local frame = CreateFrame('frame')
 
 frame:SetScript('OnEvent', function(self, event, ...) if self[event] then return self[event](self, event, ...) end end)
@@ -75,14 +79,16 @@ local function AddItemToMenu(itemID, alternativeName)
         local cooldown = getItemCD(itemID)
         local cdText = getTextWithCooldown(alternativeName or link.name, cooldown)
     
-        Dewdrop:AddLine(
-            'textHeight', PortalsDB.fontSize,
-            'text', cdText,
-            'secure', link.secure,
-            'icon', tostring(link.icon),
-            'func', function() UpdateIcon(icon) end,
-            'closeWhenClicked', true)
+        local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, cdText))
         
+        tooltip:SetCellScript(lineIndex, 1, "OnEnter", function(self)
+            secureFrame:Activate(self, link.secure)
+        end)
+
+        tooltip:SetCellScript(lineIndex, 1, "OnMouseDown", function(self)
+            UpdateIcon(link.icon)
+        end)
+
         return true
     else
         return false
@@ -93,16 +99,16 @@ local function AddSpellToMenu(link)
     local cooldown = getSpellCD(link.name)
     local cdText = getTextWithCooldown(link.name, cooldown)
 
-    Dewdrop:AddLine(
-        'textHeight', PortalsDB.fontSize,
-        'text', cdText,
-        'secure', link.secure,
-        'icon', tostring(link.icon),
-        'func', function()
-            UpdateIcon(link.icon)
-            AnnouncePortal(link.isPortal, link.name)
-        end,
-        'closeWhenClicked', true)
+    local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, cdText))
+    
+    tooltip:SetCellScript(lineIndex, 1, "OnEnter", function(self)
+        secureFrame:Activate(self, link.secure)
+    end)
+
+    tooltip:SetCellScript(lineIndex, 1, "OnMouseDown", function(self)
+        UpdateIcon(link.icon)
+        AnnouncePortal(link.isPortal, link.name)
+    end)
 end
 
 local function AddSpellsToMenu(links)
@@ -114,13 +120,13 @@ local function AddSpellsToMenu(links)
     end
 
     if (seperator) then
-        Dewdrop:AddLine()
+        tooltip:AddLine(" ")
     end
 end
 
 local function ShowWhistle()
     if (AddItemToMenu(whistle)) then
-        Dewdrop:AddLine()
+        tooltip:AddLine(" ")
     end
 end
 
@@ -137,7 +143,7 @@ local function ShowHearthstone()
     end
 
     if seperator then
-        Dewdrop:AddLine()
+        tooltip:AddLine(" ")
     end
 end
 
@@ -152,7 +158,7 @@ local function ShowOtherItems()
     end
 
     if seperator then
-        Dewdrop:AddLine()
+        tooltip:AddLine(" ")
     end
 end
 
@@ -166,74 +172,66 @@ local function ShowChallengeSpells()
     AddSpellsToMenu(links)
 end
 
-local function ShowOptions()
-    Dewdrop:AddLine(
-        'textHeight', PortalsDB.fontSize,
-        'text', L['OPTIONS'],
-        'hasArrow', true,
-        'value', 'options')    
-end
-
 local function ShowOptionsMenu()
+    Dewdrop:SetFontSize(UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT)
+
     Dewdrop:AddLine(
-        'textHeight', PortalsDB.fontSize,
+        'textHeight', UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT,
         'text', L['SHOW_ITEMS'],
         'checked', PortalsDB.showItems,
         'func', function() PortalsDB.showItems = not PortalsDB.showItems end,
         'closeWhenClicked', true)
     Dewdrop:AddLine(
-        'textHeight', PortalsDB.fontSize,
-        'text', L['SHOW_ITEM_COOLDOWNS'],
-        'checked', PortalsDB.showItemCooldowns,
-        'func', function() PortalsDB.showItemCooldowns = not PortalsDB.showItemCooldowns end,
-        'closeWhenClicked', true)
-    Dewdrop:AddLine(
-        'textHeight', PortalsDB.fontSize,
+        'textHeight', UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT,
         'text', L['ATT_MINIMAP'],
         'checked', not PortalsDB.minimap.hide,
         'func', function() ToggleMinimap() end,
         'closeWhenClicked', true)
     Dewdrop:AddLine(
-        'textHeight', PortalsDB.fontSize,
+        'textHeight', UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT,
         'text', L['ANNOUNCE'],
         'checked', PortalsDB.announce,
         'func', function() PortalsDB.announce = not PortalsDB.announce end,
         'closeWhenClicked', true)
-    Dewdrop:AddLine(
-        'textHeight', PortalsDB.fontSize,
-        'text', L['DROPDOWN_FONT_SIZE'],
-        'hasArrow', true,
-        'hasEditBox', true,
-        'editBoxText', PortalsDB.fontSize,
-        'editBoxFunc', function(value)
-            if value ~= '' and tonumber(value) ~= nil then
-                PortalsDB.fontSize = tonumber(value)
-            else
-                PortalsDB.fontSize = UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT
-            end
-        end)
 end
 
-local function UpdateMenu(level, value)
-    Dewdrop:SetFontSize(PortalsDB.fontSize)
+local function ToggleOptionsMenu(self)
+    if (self ~= nil and Dewdrop:IsOpen(self)) then
+		Dewdrop:Close()
+	else
+		Dewdrop:Open(self, 'children', ShowOptionsMenu)
+	end     
+end
 
-    if level == 1 then
-        ShowChallengeSpells()
+local function ShowTooltip(self)
+   -- Acquire a tooltip with 1 columns, aligned to left
+   tooltip = LibQTip:Acquire(addonName.."tip", 1, "LEFT") 
+   self.tooltip = tooltip
+   tooltip:EnableMouse(true)
+   tooltip:SetAutoHideDelay(.2, self)
+ 
+  -- Use smart anchoring code to anchor the tooltip to our frame
+   tooltip:SmartAnchorTo(self)
+   tooltip:Clear()
 
-        if PortalsDB.showItems then
-            ShowOtherItems()
-            ShowWhistle()
-        end
+   -- add content
+   ShowChallengeSpells()
 
-        ShowClassSpells()        
+   if PortalsDB.showItems then
+       ShowOtherItems()
+       ShowWhistle()
+   end
 
-        ShowHearthstone()        
+   ShowClassSpells()        
 
-        ShowOptions()
+   ShowHearthstone()      
 
-    elseif level == 2 and value == 'options' then
-        ShowOptionsMenu()
-    end    
+   tooltip:Show()
+end
+
+local function HideTooltip(self)
+    LibQTip:Release(self.tooltip)
+    secureFrame:Deactivate()
 end
 
 function frame:PLAYER_LOGIN()
@@ -243,9 +241,7 @@ function frame:PLAYER_LOGIN()
         PortalsDB.minimap = {}
         PortalsDB.minimap.hide = false
         PortalsDB.showItems = true
-        PortalsDB.showItemCooldowns = true
         PortalsDB.announce = false
-        PortalsDB.fontSize = UIDROPDOWNMENU_DEFAULT_TEXT_HEIGHT
         PortalsDB.version = 5
     end
 
@@ -282,18 +278,14 @@ function frame:SKILL_LINES_CHANGED()
 end
 
 function LDB.OnClick(self, button)
-	if (self ~= nil and Dewdrop:IsOpen(self)) then
-		Dewdrop:Close()
-	else
-		Dewdrop:Open(self, 'children', function(level, value) UpdateMenu(level, value) end)
-	end
-end
-
-function LDB.OnLeave()
+    if button == "RightButton" then
+        HideTooltip(self)
+        ToggleOptionsMenu(self)
+    end
 end
 
 function LDB.OnEnter(self)
-    Dewdrop:Open(self, 'children', function(level, value) UpdateMenu(level, value) end)
+    ShowTooltip(self)
 end
 
 -- slash command definition
