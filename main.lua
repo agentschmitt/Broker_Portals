@@ -195,6 +195,10 @@ local function ShowOptionsMenu()
         'closeWhenClicked', true)
 end
 
+local function IsOptionsMenuOpen(self)
+    return Dewdrop:IsOpen(self)
+end
+
 local function ToggleOptionsMenu(self)
     if (self ~= nil and Dewdrop:IsOpen(self)) then
 		Dewdrop:Close()
@@ -285,6 +289,7 @@ function LDB.OnClick(self, button)
 end
 
 function LDB.OnEnter(self)
+    if (IsOptionsMenuOpen(self)) then return end
     ShowTooltip(self)
 end
 
