@@ -112,64 +112,55 @@ local function AddSpellToMenu(link)
 end
 
 local function AddSpellsToMenu(links)
-    local seperator = false
+    local addedItem = false
 
     for _, link in pairs(links) do
         AddSpellToMenu(link)
-        seperator = true
+        addedItem = true
     end
 
-    if (seperator) then
-        tooltip:AddLine(" ")
+    return addedItem
+end
+
+local function AddItemsToMenu(itemIDs, text)
+    local addedItem = false
+
+    for i = 1, #itemIDs do
+        local itemID = itemIDs[i]
+        if (AddItemToMenu(itemID, text)) then
+            addedItem = true
+        end
     end
+
+    return addedItem
 end
 
 local function ShowWhistle()
-    if (AddItemToMenu(whistle)) then
-        tooltip:AddLine(" ")
-    end
+    return AddItemToMenu(whistle)
 end
 
 local function ShowHearthstone()
     local bindLoc = GetBindLocation()
     local text = L['INN'] .. ' ' .. bindLoc
-    local seperator = false
-
-    for i = 1, #scrolls do
-        local itemID = scrolls[i]
-        if (AddItemToMenu(itemID, text)) then
-            seperator = true
-        end
-    end
-
-    if seperator then
-        tooltip:AddLine(" ")
-    end
+    return AddItemsToMenu(scrolls, text)
 end
 
 local function ShowOtherItems()
-    local seperator = false
-
-    for i = 1, #items do
-        local itemID = items[i]
-        if (AddItemToMenu(itemID)) then
-            seperator = true
-        end
-    end
-
-    if seperator then
-        tooltip:AddLine(" ")
+    if PortalsDB.showItems then
+        return AddItemsToMenu(items)
+    else
+        return false
     end
 end
 
 local function ShowClassSpells()
     local links = updateClassSpells()
-    AddSpellsToMenu(links)
+    return AddSpellsToMenu(links)
 end
 
 local function ShowChallengeSpells()
     local links = updateChallengeSpells()
-    AddSpellsToMenu(links)
+    return AddSpellsToMenu(links)
 end
 
 local function ShowOptionsMenu()
@@ -219,16 +210,12 @@ local function ShowTooltip(self)
    tooltip:Clear()
 
    -- add content
-   ShowChallengeSpells()
+   if ShowChallengeSpells() then tooltip:AddLine(" ") end
+   if ShowOtherItems() then tooltip:AddLine(" ") end
+   if ShowClassSpells() then tooltip:AddLine(" ") end
 
-   if PortalsDB.showItems then
-       ShowOtherItems()
-       ShowWhistle()
-   end
-
-   ShowClassSpells()        
-
-   ShowHearthstone()      
+   if ShowHearthstone() then tooltip:AddLine(" ") end
+   if ShowWhistle() then --[[ tooltip:AddLine(" ") --]] end
 
    tooltip:Show()
 end
