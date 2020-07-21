@@ -20,7 +20,7 @@ local L = addonTable.L
 local items = addonTable.items
 local scrolls = addonTable.scrolls
 local challengeSpells = addonTable.challengeSpells
-local whistle = addonTable.whistle
+local whistles = addonTable.whistles
 local portals = addonTable.portals
 local itemLinks = addonTable.itemLinks
 
@@ -72,13 +72,20 @@ local function AnnouncePortal(isPortal, text)
     end
 end
 
-local function AddItemToMenu(itemID, alternativeName)
+local function AddItemToMenu(itemID, location)
     local link = itemLinks[itemID]
 
     if (link ~= nil and link.hasItem) then
         local cooldown = getItemCD(itemID)
-        local text = getTextWithCooldown(alternativeName or link.name, cooldown)
-    
+        
+        local name        
+        if location ~= nil then
+            name = link.name .. ": " .. location
+        else
+            name = link.name
+        end
+
+        local text = getTextWithCooldown(name, cooldown)    
         local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, ' '..text))
         
         tooltip:SetCellScript(lineIndex, 1, "OnEnter", function(self)
@@ -135,14 +142,13 @@ local function AddItemsToMenu(itemIDs, text)
     return addedItem
 end
 
-local function ShowWhistle()
-    return AddItemToMenu(whistle)
+local function ShowWhistles()
+    return AddItemsToMenu(whistles)
 end
 
-local function ShowHearthstone()
+local function ShowHearthstones()
     local bindLoc = GetBindLocation()
-    local text = L['INN'] .. ' ' .. bindLoc
-    return AddItemsToMenu(scrolls, text)
+    return AddItemsToMenu(scrolls, bindLoc)
 end
 
 local function ShowOtherItems()
@@ -214,8 +220,8 @@ local function ShowTooltip(self)
    if ShowOtherItems() then tooltip:AddLine(" ") end
    if ShowClassSpells() then tooltip:AddLine(" ") end
 
-   if ShowHearthstone() then tooltip:AddLine(" ") end
-   if ShowWhistle() then --[[ tooltip:AddLine(" ") --]] end
+   if ShowHearthstones() then tooltip:AddLine(" ") end
+   if ShowWhistles() then --[[ tooltip:AddLine(" ") --]] end
 
    tooltip:Show()
 end

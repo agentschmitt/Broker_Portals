@@ -134,7 +134,10 @@ end
 
 -- loads all items async to itemLinks
 local function updateItems()
-    loadItem(addonTable.whistle, addonTable.itemLinks)
+    for i = 1, #addonTable.whistles do
+        local itemID = addonTable.whistles[i]
+        loadItem(itemID, addonTable.itemLinks)
+    end
 
     for i = 1, #addonTable.scrolls do
         local itemID = addonTable.scrolls[i]

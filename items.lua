@@ -89,11 +89,15 @@ addonTable.items = {
     144392, -- Pugilist's Powerful Punching Ring (Horde)
     151016, -- Fractured Necrolyte Skull
     166559, -- Commander's Signet of Battle
-    -- items usable instead of hearthstone
+}
+
+addonTable.scrolls = {
+    -- items usable instead of hearthstone, without shared cd
     28585,  -- Ruby Slippers
     37118,  -- Scroll of Recall
     44314,  -- Scroll of Recall II
-    44315,  -- Scroll of Recall III
+    44315,  -- Scroll of Recall III  
+    -- items usable instead of hearthstone, with shared cd
     64488,  -- The Innkeeper's Daughter
     142298, -- Astonishingly Scarlet Slippers
     142542, -- Tome of Town Portal
@@ -104,11 +108,12 @@ addonTable.items = {
     165802, -- Noble Gardener's Hearthstone
     168862, -- G.E.A.R. Tracking Beacon
     168907, -- Holographic Digitalization Hearthstone
-    172179  -- Eternal Traveler's Hearthstone
+    172179, -- Eternal Traveler's Hearthstone
+    -- hearthstone
+    6948,   -- Hearthstone,  
 }
 
-addonTable.scrolls = {
-    6948    -- Hearthstone
+addonTable.whistles = {
+  168862, -- G.E.A.R. Tracking Beacon
+  141605, -- Flight Master's Whistle
 }
-
-addonTable.whistle = 141605 -- Flight Master's Whistle
