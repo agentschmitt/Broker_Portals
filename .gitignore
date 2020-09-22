@@ -1,1 +1,2 @@
-/libs/
+libs/*
+!/libs/LibSecureFrame-1.0

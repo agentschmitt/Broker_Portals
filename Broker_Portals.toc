@@ -16,10 +16,10 @@ libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
 libs\LibDewdrop-3.0\LibDewdrop-3.0.lua
 libs\LibQTip-1.0\LibQTip-1.0.lua
 libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+libs\LibSecureFrame-1.0\LibSecureFrame-1.0.lua
 
 locales.lua
 items.lua
 spells.lua
 functions.lua
-secureFrame.lua
 main.lua

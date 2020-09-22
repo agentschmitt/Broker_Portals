@@ -2,6 +2,7 @@ if not LibStub then return end
 
 local Dewdrop = LibStub('LibDewdrop-3.0', true)
 local LibQTip = LibStub('LibQTip-1.0')
+local LibSecureFrame = LibStub('LibSecureFrame-1.0')
 local LibIcon = LibStub('LibDBIcon-1.0')
 local LibDataBroker = LibStub:GetLibrary('LibDataBroker-1.1')
 
@@ -30,8 +31,6 @@ local updateChallengeSpells = addonTable.updateChallengeSpells
 local getItemCD = addonTable.getItemCD
 local getSpellCD = addonTable.getSpellCD
 local getTextWithCooldown = addonTable.getTextWithCooldown
-
-local secureFrame = addonTable.secureFrame
 
 local LDB = LibDataBroker:NewDataObject(addonName, {
     type = 'data source',
@@ -89,7 +88,7 @@ local function AddItemToMenu(itemID, location)
         local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, ' '..text))
         
         tooltip:SetCellScript(lineIndex, 1, "OnEnter", function(self)
-            secureFrame:Activate(self, link.secure)
+            LibSecureFrame:Open(link.secure, self, tooltip)
         end)
 
         tooltip:SetCellScript(lineIndex, 1, "OnMouseDown", function(self)
@@ -109,7 +108,7 @@ local function AddSpellToMenu(link)
     local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, ' '..text))
     
     tooltip:SetCellScript(lineIndex, 1, "OnEnter", function(self)
-        secureFrame:Activate(self, link.secure)
+        LibSecureFrame:Open(link.secure, self, tooltip)
     end)
 
     tooltip:SetCellScript(lineIndex, 1, "OnMouseDown", function(self)
@@ -228,7 +227,6 @@ end
 
 local function HideTooltip(self)
     LibQTip:Release(self.tooltip)
-    secureFrame:Deactivate()
 end
 
 function frame:PLAYER_LOGIN()
