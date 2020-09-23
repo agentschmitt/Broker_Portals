@@ -88,7 +88,7 @@ local function AddItemToMenu(itemID, location)
         local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, ' '..text))
         
         tooltip:SetCellScript(lineIndex, 1, "OnEnter", function(self)
-            LibSecureFrame:Open(link.secure, self, tooltip)
+            LibSecureFrame:Activate(link.secure, self, tooltip)
         end)
 
         tooltip:SetCellScript(lineIndex, 1, "OnMouseDown", function(self)
@@ -108,7 +108,7 @@ local function AddSpellToMenu(link)
     local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, ' '..text))
     
     tooltip:SetCellScript(lineIndex, 1, "OnEnter", function(self)
-        LibSecureFrame:Open(link.secure, self, tooltip)
+        LibSecureFrame:Activate(link.secure, self, tooltip)
     end)
 
     tooltip:SetCellScript(lineIndex, 1, "OnMouseDown", function(self)

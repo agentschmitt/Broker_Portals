@@ -9,12 +9,12 @@ secureFrame:Hide()
 
 ---------------------------------------
 
-function lib:Open(...)
-	secureFrame:Open(...)	
+function lib:Activate(...)
+	secureFrame:Activate(...)	
 end
 
-function lib:Close(...)
-	secureFrame:Close(...)
+function lib:Deactivate(...)
+	secureFrame:Deactivate(...)
 end
 
 ---------------------------------------
@@ -54,7 +54,7 @@ function secureFrame:Init(secure)
 	self:SetFrameLevel(owner:GetFrameLevel()+1)
 end
 
-function secureFrame:Close()
+function secureFrame:Deactivate()
 	if not InCombatLockdown() then
 		self:Hide()
 		self:ClearSecure()
@@ -62,14 +62,14 @@ function secureFrame:Close()
 	self.owner = nil
 end
 
-function secureFrame:AutoClose(parent)
+function secureFrame:DeactivateByParent(parent)
 	if parent == nil then return end
 	parent:SetScript("OnHide", function(self)
-		secureFrame:Close()
+		secureFrame:Deactivate()
 	end)
 end
 
-function secureFrame:Open(secure, owner, parent)
+function secureFrame:Activate(secure, owner, parent)
 	if self.owner then		-- "Shouldn't" happen but apparently it does and I cba to troubleshoot...
 		if not InCombatLockdown() then
 			self:ClearSecure()
@@ -77,7 +77,7 @@ function secureFrame:Open(secure, owner, parent)
     end
 	self.owner = owner
 	if not InCombatLockdown() then
-		self:AutoClose(parent)
+		self:DeactivateByParent(parent)
 		self:Init(secure)
 		self:Show()
 	end
@@ -86,7 +86,7 @@ end
 secureFrame:SetScript("OnLeave",
 	function(self)
 		local owner=self.owner
-		self:Close()
+		self:Deactivate()
 		owner:GetScript("OnLeave")
 	end
 )
