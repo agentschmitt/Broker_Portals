@@ -89,6 +89,7 @@ addonTable.items = {
     144392, -- Pugilist's Powerful Punching Ring (Horde)
     151016, -- Fractured Necrolyte Skull
     166559, -- Commander's Signet of Battle
+    180817, -- Chiffre (Maw)
 }
 
 addonTable.scrolls = {
