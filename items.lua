@@ -31,6 +31,7 @@ addonTable.items = {
     151652, -- Wormhole Generator: Argus
     168807, -- Wormhole Generator: Kul Tiras
     168808, -- Wormhole Generator: Zandalar
+    172924, -- Wormhole Generator: Shadowlands
     -- Seasonal items
     21711,  -- Lunar Festival Invitation
     37863,  -- Direbrew's Remote
