@@ -1,4 +1,5 @@
 local addonName, addonTable = ...
+local L = addonTable.L
 
 local magePortals = {
     Alliance = {
@@ -45,6 +46,7 @@ local magePortals = {
         { 224869, 'TP_RUNE' }, -- TP:Dalaran - Broken Isles
         { 193759, 'TP_RUNE' }, -- TP:Hall of the Guardian
         { 281404, 'TP_RUNE' }, -- TP:Dazar'alor
+        { 344587, 'TP_RUNE' }, -- TP:Oribos
         { 11418, 'P_RUNE' },   -- P:Undercity
         { 11420, 'P_RUNE' },   -- P:Thunder Bluff
         { 11417, 'P_RUNE' },   -- P:Orgrimmar
@@ -57,21 +59,24 @@ local magePortals = {
         { 132626, 'P_RUNE' },  -- P:Vale of Eternal Blossoms
         { 176244, 'P_RUNE' },  -- P:Warspear
         { 224871, 'P_RUNE' },  -- P:Dalaran - Broken Isles
-        { 281402, 'P_RUNE' }   -- P:Dazar'alor
+        { 281402, 'P_RUNE' },   -- P:Dazar'alor
+        { 344597, 'P_RUNE' } -- P:Oribos
     }
 }
 
 -- Gold Challenge portals
 local challengeSpells = {
-    { 131204, 'TRUE' }, -- Path of the Jade Serpent
-    { 131205, 'TRUE' }, -- Path of the Stout Brew
-    { 131206, 'TRUE' }, -- Path of the Shado-Pan
-    { 131222, 'TRUE' }, -- Path of the Mogu King
-    { 131225, 'TRUE' }, -- Path of the Setting Sun
-    { 131231, 'TRUE' }, -- Path of the Scarlet Blade
-    { 131229, 'TRUE' }, -- Path of the Scarlet Mitre
-    { 131232, 'TRUE' }, -- Path of the Necromancer
-    { 131228, 'TRUE' }, -- Path of the Black Ox
+    --MoP Challenge
+    { 131204, L['Temple of the Jade Serpent'] }, -- Path of the Jade Serpent
+    { 131205, L['Stormstout Brewery'] }, -- Path of the Stout Brew
+    { 131206, L['Shado-Pan Monastery'] }, -- Path of the Shado-Pan
+    { 131222, L['Mogushan Palace'] }, -- Path of the Mogu King
+    { 131225, L['Gate of the Setting Sun'] }, -- Path of the Setting Sun
+    { 131231, L['Scarlet Halls'] }, -- Path of the Scarlet Blade
+    { 131229, L['Scarlet Monastery'] }, -- Path of the Scarlet Mitre
+    { 131232, L['Scholomance'] }, -- Path of the Necromancer
+    { 131228, L['Siege of Niuzao Temple'] }, -- Path of the Black Ox
+    --WoD Challenge
     { 159895, 'TRUE' }, -- Path of the Bloodmaul
     { 159896, 'TRUE' }, -- Path of the Iron Prow
     { 159897, 'TRUE' }, -- Path of the Vigilant
@@ -79,7 +84,22 @@ local challengeSpells = {
     { 159899, 'TRUE' }, -- Path of the Crescent Moon
     { 159900, 'TRUE' }, -- Path of the Dark Rail
     { 159901, 'TRUE' }, -- Path of the Verdant
-    { 159902, 'TRUE' }  -- Path of the Burning Mountain
+    { 159902, 'TRUE' }, -- Path of the Burning Mountain
+    --SL Season3 M+
+    { 354462, L['Necrotic Wake'] }, -- Path of the Courageous
+    { 354463, L['Plaguefall'] }, -- Path of the Plagued
+    { 354464, L['Mists of Tirna Scithe'] }, -- Path of the Misty Forest
+    { 354465, L['Halls of Atonement'] }, -- Path of the Sinful Soul
+    { 354466, L['Sprires of Ascension'] }, -- Path of the Ascendant
+    { 354467, L['Theater of Pain'] }, -- Path of the Undefeated
+    { 354468, L['De Other Side'] }, -- Path of the Scheming Loa
+    { 354469, L['Sanguine Depths'] }, -- Path of the Stone Warden
+    { 367416, L['Tazavesh'] }, -- Path of the Streetwise Merchant
+    --SL Season4 M+
+    { 15695, L['Grimrail Depot'] }, --Path of the Dark Rail    
+    { 159896, L['Irondocks'] }, -- Path of the Iron Prow
+    { 373262, L['Karazhan'] }, --Path of the Fallen Guardian
+    { 373274, L['Mechagon'] }, --Path of the Scrappy Prince    
 }
 
 local UnitClass = UnitClass

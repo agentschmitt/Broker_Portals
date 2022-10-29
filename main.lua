@@ -103,7 +103,13 @@ end
 
 local function AddSpellToMenu(link)
     local cooldown = getSpellCD(link.name)
-    local text = getTextWithCooldown(link.name, cooldown)
+    local text = link.name;
+
+    if (link.location ~= nil) then
+        text = link.location
+    end
+
+    local text = getTextWithCooldown(text, cooldown)
 
     local lineIndex = tooltip:AddLine(("|T%s:16|t%s"):format(link.icon, ' '..text))
     

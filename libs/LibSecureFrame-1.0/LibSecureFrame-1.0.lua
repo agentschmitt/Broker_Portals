@@ -1,10 +1,11 @@
 assert(LibStub, "LibSecureFrame-1.0 requires LibStub")
-local lib, oldminor = LibStub:NewLibrary("LibSecureFrame-1.0", 0)
+local lib, oldminor = LibStub:NewLibrary("LibSecureFrame-1.0", 1)
 if not lib then return end
 
 ---------------------------------------
 
 local secureFrame = CreateFrame("Button", nil, nil, "SecureActionButtonTemplate")
+secureFrame:RegisterForClicks("AnyUp", "AnyDown")
 secureFrame:Hide()
 
 ---------------------------------------
