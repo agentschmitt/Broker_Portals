@@ -1,9 +1,9 @@
 local addonName, addonTable = ...
 
 local C_ToyBox = C_ToyBox
-local GetContainerNumSlots = GetContainerNumSlots
-local GetContainerItemLink = GetContainerItemLink
-local GetContainerItemInfo = GetContainerItemInfo
+local GetContainerNumSlots = C_Container.GetContainerNumSlots
+local GetContainerItemLink = C_Container.GetContainerItemLink
+local GetContainerItemInfo = C_Container.GetContainerItemInfo
 local GetItemInfo = GetItemInfo
 local GetInventoryItemLink = GetInventoryItemLink
 local GetItemCooldown = GetItemCooldown
@@ -181,12 +181,18 @@ end
 local function loadSpell(spellID, spellFlag, links)
     if IsPlayerSpell(spellID) then
         local name, _, icon = GetSpellInfo(spellID)
+        local location = nill
+
+        if (spellFlag ~= 'TRUE' and spellFlag ~= 'P_RUNE' and spellFlag ~= 'TP_RUNE') then
+            location = spellFlag
+        end
 
         if hasSpell(name) then
             links[name] = {
                 name = name,
                 icon = icon,
                 isPortal = spellFlag == 'P_RUNE',
+                location = location,
                 secure = {
                     type = 'spell',
                     spell = name

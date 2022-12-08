@@ -1,11 +1,11 @@
-## Interface: 80300
+## Interface: 100002
 ## Title: Broker - |cffffffffPortals|r
 ## Notes: Provides access to all Portal and Teleport spells on mouseover.
 ## Author: CrazyBenny of Stormrage-EU, agentschmitt
 ## X-Email: michal AT svab DOT net
 ## X-Website: https://github.com/agentschmitt/Broker_Portals
 ## LastUpdate: 2020-07-12T15:40:00Z
-## Version: 1.20.0
+## Version: 1.21.0
 ## OptionalDeps: LibDBIcon-1.0
 
 ## SavedVariables: PortalsDB

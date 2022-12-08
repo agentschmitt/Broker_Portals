@@ -91,6 +91,7 @@ addonTable.items = {
     151016, -- Fractured Necrolyte Skull
     166559, -- Commander's Signet of Battle
     180817, -- Chiffre (Maw)
+    169064, -- Cloak (Mechagon)
 }
 
 addonTable.scrolls = {
@@ -111,6 +112,8 @@ addonTable.scrolls = {
     168862, -- G.E.A.R. Tracking Beacon
     168907, -- Holographic Digitalization Hearthstone
     172179, -- Eternal Traveler's Hearthstone
+    193588, -- Timewalkers Hearthstone
+    188952, -- Dominated Hearthstone
     -- hearthstone
     6948,   -- Hearthstone,  
 }
